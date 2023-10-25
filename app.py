@@ -9,17 +9,36 @@ options = {
     # Add more configuration options here
 }
 
+# Function to convert options to binary format
+def options_to_binary(config_options):
+    binary_string = ''
+    for option, choices in options.items():
+        selected_option = config_options[option]
+        binary_string += '1' if selected_option == choices[0] else '0'
+    return int(binary_string, 2)
+
+# Function to convert binary format to options
+def binary_to_options(binary_value):
+    binary_string = bin(binary_value)[2:].zfill(8)
+    config_options = {}
+    for i, (option, choices) in enumerate(options.items()):
+        selected_option = choices[0] if binary_string[i] == '1' else choices[1]
+        config_options[option] = selected_option
+    return config_options
+
 # Function to save the config file
 def save_config(config_name, config_options):
+    binary_value = options_to_binary(config_options)
     with open(f'{config_name}.config', 'w') as f:
-        json.dump(config_options, f)
+        f.write(str(binary_value))
     st.success(f'Config file {config_name}.config saved successfully!')
 
 # Function to load the config file
 def load_config(config_name):
     try:
         with open(f'{config_name}.config', 'r') as f:
-            config_options = json.load(f)
+            binary_value = int(f.read())
+        config_options = binary_to_options(binary_value)
         st.success(f'Config file {config_name}.config loaded successfully!')
         return config_options
     except FileNotFoundError:
