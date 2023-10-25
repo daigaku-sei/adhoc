@@ -1,5 +1,13 @@
 import streamlit as st
 
+# Define the options for each configuration
+options = {
+    'Theme': ['Light', 'Dark'],
+    'Password Protection': ['Yes', 'No'],
+    'Draw Animation': ['Yes', 'No']
+    # Add more configuration options here
+}
+
 # Main Streamlit app
 def main():
     st.title('Config File Management')
