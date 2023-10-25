@@ -1,6 +1,5 @@
 import streamlit as st
 import json
-from streamlit import theme as st_theme
 
 # Define the options for each configuration
 options = {
@@ -61,9 +60,29 @@ def main():
     # Change theme dynamically based on the selected option
     if 'Theme' in config_options:
         if config_options['Theme'] == 'Dark':
-            st_theme.set_theme('dark')
+            st.markdown(
+                """
+                <style>
+                body {
+                    background-color: #1f2937;
+                    color: white;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True
+            )
         else:
-            st_theme.set_theme('light')
+            st.markdown(
+                """
+                <style>
+                body {
+                    background-color: white;
+                    color: black;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True
+            )
 
 # Run the app
 if __name__ == '__main__':
