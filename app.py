@@ -1,24 +1,27 @@
 import streamlit as st
 import json
 
-# Define the options
-options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6', 'Option 7', 'Option 8']
+# Define the options for each configuration
+options = {
+    'Theme': ['Light', 'Dark'],
+    'Password Protection': ['Yes', 'No'],
+    'Draw Animation': ['Yes', 'No']
+    # Add more configuration options here
+}
 
 # Function to save the config file
-def save_config(config_name, selected_option):
-    config = {'option': selected_option}
+def save_config(config_name, config_options):
     with open(f'{config_name}.config', 'w') as f:
-        json.dump(config, f)
+        json.dump(config_options, f)
     st.success(f'Config file {config_name}.config saved successfully!')
 
 # Function to load the config file
 def load_config(config_name):
     try:
         with open(f'{config_name}.config', 'r') as f:
-            config = json.load(f)
-        selected_option = config['option']
+            config_options = json.load(f)
         st.success(f'Config file {config_name}.config loaded successfully!')
-        return selected_option
+        return config_options
     except FileNotFoundError:
         st.error(f'Config file {config_name}.config not found!')
         return None
@@ -31,20 +34,28 @@ def main():
     user_login = st.text_input('User Login')
 
     # Create a unique config name based on user login
-    config_name = f'{user_login}.config'
+    config_name = user_login
 
-    # Create a radio button widget
-    selected_option = st.radio('Options', options)
+    # Create a dictionary to store the selected options
+    config_options = {}
+
+    # Iterate over each configuration option
+    for option, choices in options.items():
+        # Create a radio button widget for each option
+        selected_option = st.radio(option, choices)
+        # Store the selected option in the config_options dictionary
+        config_options[option] = selected_option
 
     # Save button
     if st.button('Save Config'):
-        save_config(config_name, selected_option)
+        save_config(config_name, config_options)
 
     # Load button
     if st.button('Load Config'):
-        loaded_option = load_config(config_name)
-        if loaded_option:
-            st.write(f'Selected option: {loaded_option}')
+        loaded_options = load_config(config_name)
+        if loaded_options:
+            for option, selected_option in loaded_options.items():
+                st.write(f'{option}: {selected_option}')
 
 # Run the app
 if __name__ == '__main__':
